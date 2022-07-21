@@ -1,0 +1,63 @@
+def future_is_now():
+  set_gravity([0.0, 0.0, 9.82])
+  step_count_4051184a_1886_4bae_8b9c_2b88699aeaf4 = 0.0
+  thread Step_Counter_Thread_a36c9137_5a30_452d_9c91_14acb88604d4():
+    while (True):
+      step_count_4051184a_1886_4bae_8b9c_2b88699aeaf4 = step_count_4051184a_1886_4bae_8b9c_2b88699aeaf4 + 1.0
+      sync()
+    end
+  end
+  run Step_Counter_Thread_a36c9137_5a30_452d_9c91_14acb88604d4()
+  set_tool_communication(False, 115200, 0, 1, 1.5, 3.5)
+  set_tool_output_mode(0)
+  set_tool_digital_output_mode(0, 1)
+  set_tool_digital_output_mode(1, 1)
+  set_tool_voltage(0)
+  set_safety_mode_transition_hardness(1)
+  set_tcp(p[0.0,0.0,0.0,0.0,0.0,0.0])
+  set_standard_analog_input_domain(0, 1)
+  set_standard_analog_input_domain(1, 1)
+  set_tool_analog_input_domain(0, 1)
+  set_tool_analog_input_domain(1, 1)
+  set_analog_outputdomain(0, 0)
+  set_analog_outputdomain(1, 0)
+  set_input_actions_to_default()
+  set_target_payload(0.100000, [0.000000, 0.000000, 0.000000], [0.000033, 0.000033, 0.000033, 0.000000, 0.000000, 0.000000])
+  global poseReady=  False  
+  global rx=1.171
+  global ry=1.171
+  global rz=1.233
+  global x=-0.098
+  global y=0.133
+  global z=0.695
+  while (True):
+    $ 2 "Robot Program"
+    $ 3 "poseReady≔read_input_boolean_register(64)"
+    global poseReady=read_input_boolean_register(64)
+    $ 4 "x≔read_input_float_register(0)"
+    global x=read_input_float_register(0)
+    $ 5 "y≔read_input_float_register(1)"
+    global y=read_input_float_register(1)
+    $ 6 "z≔read_input_float_register(2)"
+    global z=read_input_float_register(2)
+    $ 7 "rx≔read_input_float_register(3)"
+    global rx=read_input_float_register(3)
+    $ 8 "ry≔read_input_float_register(4)"
+    global ry=read_input_float_register(4)
+    $ 9 "rz≔read_input_float_register(5)"
+    global rz=read_input_float_register(5)
+    $ 10 "If poseReady"
+    if (poseReady):
+      $ 11 "rotation≔rpy2rotvec([rx,ry,rz])"
+      global rotation=rpy2rotvec([rx,ry,rz])
+      $ 12 "q≔get_inverse_kin(p[x, y, z, rotation[0], rotation[1],rotation[2]])"
+      global q=get_inverse_kin(p[x, y, z, rotation[0], rotation[1],rotation[2]])
+      $ 13 "servoj(q, lookahead_time=0.2, gain=100)"
+      servoj(q, lookahead_time=0.2, gain=100)
+    else:
+      $ 14 "Else" "noBreak"
+      $ 15 "movej([-3.14,-2.89,1.91,-2.21,4.71,3.14],a=1.2,v=0.3,t=0,r=0)"
+      movej([-3.14,-2.89,1.91,-2.21,4.71,3.14],a=1.2,v=0.3,t=0,r=0)
+    end
+  end
+end
